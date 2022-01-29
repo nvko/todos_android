@@ -1,12 +1,10 @@
 package com.nvko.todolist.ui.fragment
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,6 +17,7 @@ import com.nvko.todolist.ui.viewmodel.TaskViewModel
 import com.nvko.todolist.databinding.FragmentListBinding
 import com.nvko.todolist.ui.utils.SwipeToDeleteCallback
 import com.nvko.todolist.ui.adapter.ListAdapter
+import com.nvko.todolist.ui.utils.onQueryTextChanged
 
 class ListFragment : Fragment() {
 
@@ -35,6 +34,7 @@ class ListFragment : Fragment() {
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_listFragment_to_addFragment)
         }
+        setHasOptionsMenu(true)
         taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
         setupRecyclerView()
         return binding.root
@@ -56,7 +56,37 @@ class ListFragment : Fragment() {
             { tasks -> listAdapter.setTasks(tasks) })
         setupSwipeToDeleteFunction(listAdapter)
 
+
 //        binding.taskListRecyclerView.setOnClickListener {  }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_menu, menu)
+
+        val searchItem = menu.findItem(R.id.action_search_tasks);
+        val searchView = searchItem.actionView as SearchView
+        searchView.onQueryTextChanged {
+            taskViewModel.searchQuery.value = it
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        return when(item.itemId) {
+            R.id.action_search_tasks -> {
+                true
+            }
+            R.id.action_sort_by_title -> {
+
+                 true
+            }
+            R.id.action_hide_completed_tasks -> {
+
+                true
+            }
+            else -> { super.onOptionsItemSelected(item) }
+        }
     }
 
     private fun setupSwipeToDeleteFunction(listAdapter: ListAdapter) {

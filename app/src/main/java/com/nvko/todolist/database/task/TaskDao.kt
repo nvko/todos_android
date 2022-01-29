@@ -2,6 +2,7 @@ package com.nvko.todolist.database.task
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
@@ -15,7 +16,7 @@ interface TaskDao {
     @Delete
     fun deleteTask(task: Task)
 
-    @Query("SELECT * FROM user_tasks ORDER BY due_date ASC")
-    fun getAllTasks(): LiveData<MutableList<Task>>
+    @Query("SELECT * FROM user_tasks WHERE title LIKE '%' || :searchQuery || '%' ORDER BY due_date ASC")
+    fun getAllTasks(searchQuery: String): Flow<MutableList<Task>>
 
 }

@@ -1,11 +1,13 @@
 package com.nvko.todolist.database.task
 
-import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
 // class that abstracts the access to multiple data sources
 class TaskRepository(private val taskDao: TaskDao) {
 
-    val getAllTasks: LiveData<MutableList<Task>> = taskDao.getAllTasks()
+    fun getAllTasks(searchQuery: String) : Flow<MutableList<Task>> {
+        return taskDao.getAllTasks(searchQuery);
+    }
 
     fun addTask(task: Task) {
         taskDao.addTask(task)

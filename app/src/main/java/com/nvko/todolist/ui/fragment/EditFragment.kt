@@ -44,8 +44,10 @@ class EditFragment : Fragment() {
             if (!isEdited) isEdited = true
         }
 
-        binding.updateTaskDueDateCalendarView.setOnDateChangeListener { calendarView, _, _, _ ->
-            args.currentTask.dueDate = Date(calendarView.date)
+        binding.updateTaskDueDateCalendarView.setOnDateChangeListener { calendarView, year, month, dayOfMonth ->
+            val calendar = Calendar.getInstance()
+            calendar.set(year, month, dayOfMonth);
+            args.currentTask.dueDate = calendar.time
             if (!isEdited) isEdited = true
         }
 

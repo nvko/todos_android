@@ -55,9 +55,6 @@ class ListFragment : Fragment() {
             viewLifecycleOwner,
             { tasks -> listAdapter.setTasks(tasks.toMutableList()) })
         setupSwipeToDeleteFunction(listAdapter)
-
-
-//        binding.taskListRecyclerView.setOnClickListener {  }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -73,25 +70,25 @@ class ListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        return when(item.itemId) {
+         when(item.itemId) {
             R.id.action_search_tasks -> {
-                true
+                return true
             }
             R.id.action_sort_by_date -> {
                 taskViewModel.sortOrder.value = TaskViewModel.SortOrder.BY_DATE
-                true
+                return true
             }
             R.id.action_sort_by_title -> {
                 taskViewModel.sortOrder.value = TaskViewModel.SortOrder.BY_TITLE
-                 true
+                return true
             }
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
                 taskViewModel.hideCompleted.value = item.isChecked
-                true
+                return true
             }
-            else -> { super.onOptionsItemSelected(item) }
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private fun setupSwipeToDeleteFunction(listAdapter: ListAdapter) {

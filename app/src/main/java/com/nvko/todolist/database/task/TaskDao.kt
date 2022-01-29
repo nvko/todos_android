@@ -11,9 +11,12 @@ interface TaskDao {
         searchQuery: String,
         sortOrder: TaskViewModel.SortOrder,
         hideCompleted: Boolean
-    ): Flow<List<Task>> = when (sortOrder) {
-        TaskViewModel.SortOrder.BY_DATE -> getAllTasksByDate(searchQuery, hideCompleted)
-        TaskViewModel.SortOrder.BY_TITLE -> getAllTasksByTitle(searchQuery, hideCompleted)
+    ): Flow<List<Task>> {
+        return if (TaskViewModel.SortOrder.BY_DATE == sortOrder) {
+            getAllTasksByDate(searchQuery, hideCompleted)
+        } else {
+            getAllTasksByTitle(searchQuery, hideCompleted)
+        }
     }
 
 

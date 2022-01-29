@@ -2,7 +2,6 @@ package com.nvko.todolist.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.nvko.todolist.database.task.Task
@@ -10,6 +9,7 @@ import com.nvko.todolist.database.task.TaskDatabase
 import com.nvko.todolist.database.task.TaskRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
@@ -18,8 +18,16 @@ import kotlinx.coroutines.launch
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
     val taskDao = TaskDatabase.getDatabase(application).taskDao()
+
     val searchQuery = MutableStateFlow("")
-    private val tasksFlow = searchQuery.flatMapLatest { taskRepository.getAllTasks(it) }
+    val sortOrder = MutableStateFlow(SortOrder.BY_DATE)
+    val hideCompleted = MutableStateFlow(false)
+
+    private val tasksFlow =
+        combine(searchQuery, sortOrder, hideCompleted) { query, sortOrder, hideCompleted ->
+            Triple(query, sortOrder, hideCompleted)
+        }.flatMapLatest { taskDao.getTasks(it.first, it.second, it.third) }
+
     private val taskRepository = TaskRepository(taskDao)
     val getAllTasks = tasksFlow.asLiveData()
 
@@ -41,4 +49,6 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
             taskRepository.deleteTask(task)
         }
     }
+
+    enum class SortOrder { BY_TITLE, BY_DATE }
 }

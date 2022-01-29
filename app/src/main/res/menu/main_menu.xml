@@ -8,12 +8,16 @@
         android:title="Search"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <item android:id="@+id/action_sort_by_date"
+        app:showAsAction="never"
+        android:title="Sort by date"/>
 
     <item android:id="@+id/action_sort_by_title"
         app:showAsAction="never"
         android:title="Sort by title"/>
 
     <item android:id="@+id/action_hide_completed_tasks"
-        app:showAsAction="never"
+        app:showAsAction="never|withText"
+        app:actionViewClass="android.widget.CheckBox"
         android:title="Hide completed"/>
 </menu>

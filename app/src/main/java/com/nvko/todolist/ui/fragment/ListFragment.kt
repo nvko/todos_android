@@ -53,7 +53,7 @@ class ListFragment : Fragment() {
         binding.taskListRecyclerView.addItemDecoration(dividerItemDecoration)
         taskViewModel.getAllTasks.observe(
             viewLifecycleOwner,
-            { tasks -> listAdapter.setTasks(tasks) })
+            { tasks -> listAdapter.setTasks(tasks.toMutableList()) })
         setupSwipeToDeleteFunction(listAdapter)
 
 
@@ -77,12 +77,17 @@ class ListFragment : Fragment() {
             R.id.action_search_tasks -> {
                 true
             }
+            R.id.action_sort_by_date -> {
+                taskViewModel.sortOrder.value = TaskViewModel.SortOrder.BY_DATE
+                true
+            }
             R.id.action_sort_by_title -> {
-
+                taskViewModel.sortOrder.value = TaskViewModel.SortOrder.BY_TITLE
                  true
             }
             R.id.action_hide_completed_tasks -> {
-
+                item.isChecked = !item.isChecked
+                taskViewModel.hideCompleted.value = item.isChecked
                 true
             }
             else -> { super.onOptionsItemSelected(item) }
